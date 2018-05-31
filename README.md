@@ -14,6 +14,7 @@ action-2-name:	actions-2-command
 
 `action-name` is displayed label to identify command.
 `action-command` is a command that will be executed when this action will be selected from a menu. Any occurence of `%s` will be replaced with clipboard contents.
+Name should be separated from a command by a tab.
 
 See `config.sample` file for an example.
 
