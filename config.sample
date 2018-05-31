@@ -1,0 +1,2 @@
+mpv	mpv %s
+youtube-dl	xterm -hold -e "youtube-dl '%s'"

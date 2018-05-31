@@ -15,6 +15,8 @@ action-2-name:	actions-2-command
 `action-name` is displayed label to identify command.
 `action-command` is a command that will be executed when this action will be selected from a menu. Any occurence of `%s` will be replaced with clipboard contents.
 
+See `config.sample` file for an example.
+
 ## Dependencies
 - perl
 - xclip
