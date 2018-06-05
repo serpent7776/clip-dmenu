@@ -23,7 +23,6 @@ my $selected_cmd = $commands{$selected_name};
 chomp $selected_cmd;
 # TODO: use some perl module to get clipboard #
 my $clipboard = `xclip -sel clip -o`;
-# TODO: use String::Replace to string replace, perl's s/ is not safe here #
 $selected_cmd =~ s/%s/$clipboard/g;
 # TODO: add flag to run process in background #
 $selected_cmd .= ' &';
