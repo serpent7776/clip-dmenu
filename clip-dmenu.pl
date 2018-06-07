@@ -2,6 +2,9 @@
 use strict;
 use warnings;
 
+use FileHandle;
+use IPC::Open2;
+
 # TODO: use xdg to get .config dir #
 my $config_file_name = $ENV{'HOME'} . '/.config/clip-dmenu/config';
 open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
@@ -14,11 +17,15 @@ while (my $line = <$fh>) {
 my $all_names = join "\n", keys %commands;
 # TODO: make sure this command is safe #
 # TODO: support dmenu, rofi and others #
-my $selected_name = `echo "$all_names" | rofi -dmenu`;
+open2(*Reader, *Writer, 'rofi -dmenu');
+print Writer $all_names;
+close Writer;
+my $selected_name = <Reader>;
+close Reader;
+chomp $selected_name;
 if ($selected_name eq '') {
 	exit;
 }
-chomp $selected_name;
 my $selected_cmd = $commands{$selected_name};
 chomp $selected_cmd;
 # TODO: use some perl module to get clipboard #
