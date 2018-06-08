@@ -11,6 +11,7 @@ open my $fh, '<', $config_file_name or die "cannot open config file $config_file
 
 my %commands;
 while (my $line = <$fh>) {
+	chomp $line;
 	my ($name, $cmd) = split('\t', $line, 3);
 	$commands{$name} = $cmd;
 }
@@ -27,7 +28,6 @@ if ($selected_name eq '') {
 	exit;
 }
 my $selected_cmd = $commands{$selected_name};
-chomp $selected_cmd;
 # TODO: use some perl module to get clipboard #
 my $clipboard = `xclip -sel clip -o`;
 $selected_cmd =~ s/%s/$clipboard/g;
