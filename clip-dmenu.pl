@@ -16,7 +16,6 @@ while (my $line = <$fh>) {
 	$commands{$name} = $cmd;
 }
 my $all_names = join "\n", keys %commands;
-# TODO: make sure this command is safe #
 # TODO: support dmenu, rofi and others #
 open2(*Reader, *Writer, 'rofi -dmenu');
 print Writer $all_names;
