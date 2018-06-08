@@ -4,6 +4,7 @@ use warnings;
 
 use FileHandle;
 use IPC::Open2;
+use Clipboard;
 
 # TODO: use xdg to get .config dir #
 my $config_file_name = $ENV{'HOME'} . '/.config/clip-dmenu/config';
@@ -27,8 +28,7 @@ if ($selected_name eq '') {
 	exit;
 }
 my $selected_cmd = $commands{$selected_name};
-# TODO: use some perl module to get clipboard #
-my $clipboard = `xclip -sel clip -o`;
+my $clipboard = Clipboard->paste;
 $selected_cmd =~ s/%s/$clipboard/g;
 # TODO: add flag to run process in background #
 $selected_cmd .= ' &';
