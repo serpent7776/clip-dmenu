@@ -5,9 +5,11 @@ use warnings;
 use FileHandle;
 use IPC::Open2;
 use Clipboard;
+use File::XDG;
 
+my $xdg = File::XDG->new(name => 'clip-dmenu');
 # TODO: use xdg to get .config dir #
-my $config_file_name = $ENV{'HOME'} . '/.config/clip-dmenu/config';
+my $config_file_name = $xdg->config_home() . '/config';
 open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
 
 my %commands;
