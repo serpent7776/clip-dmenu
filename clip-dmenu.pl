@@ -14,7 +14,7 @@ my @labels = ();
 my @commands = ();
 while (my $line = <$fh>) {
 	chomp $line;
-	if ($line =~ m/^\s*#/) {
+	if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
 		next;
 	}
 	my ($name, $cmd) = split('\t', $line, 3);
