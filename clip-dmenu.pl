@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use List::Util qw(first);
 use FileHandle;
 use IPC::Open2;
 use Clipboard;
@@ -9,13 +10,15 @@ use Clipboard;
 my $config_file_name =  ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
 
-my %commands;
+my @labels = ();
+my @commands = ();
 while (my $line = <$fh>) {
 	chomp $line;
 	my ($name, $cmd) = split('\t', $line, 3);
-	$commands{$name} = $cmd;
+	push @labels, $name;
+	push @commands, $cmd;
 }
-my $all_names = join "\n", keys %commands;
+my $all_names = join "\n", @labels;
 # TODO: support dmenu, rofi and others #
 open2(*Reader, *Writer, 'rofi -dmenu');
 print Writer $all_names;
@@ -26,7 +29,8 @@ if ((not defined $selected_name) or ($selected_name eq '')) {
 	exit;
 }
 chomp $selected_name;
-my $selected_cmd = $commands{$selected_name};
+my $idx = first { $labels[$_] eq $selected_name } 0 .. $#labels;
+my $selected_cmd = $commands[$idx];
 my $clipboard = Clipboard->paste;
 $selected_cmd =~ s/%s/$clipboard/g;
 # TODO: add flag to run process in background #
