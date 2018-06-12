@@ -22,10 +22,10 @@ print Writer $all_names;
 close Writer;
 my $selected_name = <Reader>;
 close Reader;
-chomp $selected_name;
-if ($selected_name eq '') {
+if ((not defined $selected_name) or ($selected_name eq '')) {
 	exit;
 }
+chomp $selected_name;
 my $selected_cmd = $commands{$selected_name};
 my $clipboard = Clipboard->paste;
 $selected_cmd =~ s/%s/$clipboard/g;
