@@ -15,8 +15,12 @@ my @commands = ();
 while (my $line = <$fh>) {
 	chomp $line;
 	my ($name, $cmd) = split('\t', $line, 3);
-	push @labels, $name;
-	push @commands, $cmd;
+	if (defined $name and defined $cmd) {
+		push @labels, $name;
+		push @commands, $cmd;
+	} else {
+		print STDERR "Ignoring malformed entry '$line'\n";
+	}
 }
 my $all_names = join "\n", @labels;
 # TODO: support dmenu, rofi and others #
