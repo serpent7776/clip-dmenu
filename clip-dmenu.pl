@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use List::Util qw(first);
-use FileHandle;
 use IPC::Open2;
 use Clipboard;
 
