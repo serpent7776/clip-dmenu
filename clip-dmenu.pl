@@ -14,6 +14,9 @@ my @labels = ();
 my @commands = ();
 while (my $line = <$fh>) {
 	chomp $line;
+	if ($line =~ m/^\s*#/) {
+		next;
+	}
 	my ($name, $cmd) = split('\t', $line, 3);
 	if (defined $name and defined $cmd) {
 		push @labels, $name;
