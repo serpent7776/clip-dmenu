@@ -2,11 +2,23 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
 use List::Util qw(first);
 use IPC::Open2;
 use Clipboard;
 
-my $config_file_name =  ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
+my %o = (
+	file => undef,
+	background => 0,
+	cmd => 'dmenu',
+);
+GetOptions(
+	'f|file=s' => \$o{'file'},
+	'b|background' => \$o{'background'},
+	'c|cmd=s' => \$o{'cmd'},
+);
+
+my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
 
 my @labels = ();
@@ -25,8 +37,7 @@ while (my $line = <$fh>) {
 	}
 }
 my $all_names = join "\n", @labels;
-# TODO: support dmenu, rofi and others #
-open2(*Reader, *Writer, 'rofi -dmenu');
+open2(*Reader, *Writer, $o{'cmd'});
 print Writer $all_names;
 close Writer;
 my $selected_name = <Reader>;
@@ -39,6 +50,7 @@ my $idx = first { $labels[$_] eq $selected_name } 0 .. $#labels;
 my $selected_cmd = $commands[$idx];
 my $clipboard = Clipboard->paste;
 $selected_cmd =~ s/%s/$clipboard/g;
-# TODO: add flag to run process in background #
-$selected_cmd .= ' &';
+if ($o{'background'}) {
+        $selected_cmd .= ' &';
+}
 system($selected_cmd);
