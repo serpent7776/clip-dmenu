@@ -1,2 +1,5 @@
+# This is a comment
+
+#label	command
 mpv	mpv %s
 youtube-dl	xterm -hold -e "youtube-dl '%s'"
