@@ -20,5 +20,4 @@ See `config.sample` file for an example.
 
 ## Dependencies
 - perl
-- xclip
-- rofi (for now dmenu is not supported)
+- dmenu (or equivalent, like rofi)
