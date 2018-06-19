@@ -21,18 +21,18 @@ GetOptions(
 );
 
 if ($o{help}) {
-	print q{
+	print <<END;
 usage: clip-dmenu [OPTIONS]
-	OPTIONS:
-	--file
-	-f       specifies path to config file
-	--background
-	-b       run selected command in the background
-	--command
-	-c       specify command to run instead of `dmenu`
-	--help
-	-h       show this help
-};
+  OPTIONS:
+    --file
+    -f       specifies path to config file
+    --background
+    -b       run selected command in the background
+    --command
+    -c       specify command to run instead of `dmenu`
+    --help
+    -h       show this help
+END
 	exit;
 }
 
