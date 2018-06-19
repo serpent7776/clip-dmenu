@@ -7,18 +7,32 @@ use List::Util qw(first);
 use IPC::Open2;
 use Clipboard;
 
+use constant {
+	VERSION => 0.10,
+};
+
 my %o = (
 	help => 0,
+	version => 0,
 	file => undef,
 	background => 0,
 	cmd => 'dmenu',
 );
 GetOptions(
 	'h|help' => \$o{'help'},
+	'version' => \$o{'version'},
 	'f|file=s' => \$o{'file'},
 	'b|background' => \$o{'background'},
 	'c|cmd=s' => \$o{'cmd'},
 );
+
+if ($o{'version'}) {
+	my $s = <<END;
+clip-dmenu v%s
+END
+	print sprintf($s, VERSION);
+	exit;
+}
 
 if ($o{help}) {
 	print <<END;
