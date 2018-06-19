@@ -8,15 +8,33 @@ use IPC::Open2;
 use Clipboard;
 
 my %o = (
+	help => 0,
 	file => undef,
 	background => 0,
 	cmd => 'dmenu',
 );
 GetOptions(
+	'h|help' => \$o{'help'},
 	'f|file=s' => \$o{'file'},
 	'b|background' => \$o{'background'},
 	'c|cmd=s' => \$o{'cmd'},
 );
+
+if ($o{help}) {
+	print q{
+usage: clip-dmenu [OPTIONS]
+	OPTIONS:
+	--file
+	-f       specifies path to config file
+	--background
+	-b       run selected command in the background
+	--command
+	-c       specify command to run instead of `dmenu`
+	--help
+	-h       show this help
+};
+	exit;
+}
 
 my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
