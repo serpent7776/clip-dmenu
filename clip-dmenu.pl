@@ -11,6 +11,8 @@ use constant {
 	VERSION => 0.10,
 };
 
+# TODO: create man page #
+
 my %o = (
 	help => 0,
 	version => 0,
@@ -39,13 +41,14 @@ if ($o{help}) {
 usage: clip-dmenu [OPTIONS]
   OPTIONS:
     --file
-    -f       specifies path to config file
+    -f         specifies path to config file
     --background
-    -b       run selected command in the background
+    -b         run selected command in the background
     --command
-    -c       specify command to run instead of `dmenu`
+    -c         specify command to run instead of `dmenu`
     --help
-    -h       show this help
+    -h         show this help
+    --version  show version information
 END
 	exit;
 }
