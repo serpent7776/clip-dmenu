@@ -18,6 +18,20 @@ Name should be separated from a command by a tab.
 
 See `config.sample` file for an example.
 
+## Invocation
+`clip-dmenu [OPTIONS]`
+where OPTIONS may be:
+
+	--file
+	-f         specifies path to config file
+	--background
+	-b         run selected command in the background
+	--command
+	-c         specify command to run instead of `dmenu`
+	--help
+	-h         show help
+	--version  show version information
+
 ## Dependencies
 - perl
 - dmenu (or equivalent, like rofi)
