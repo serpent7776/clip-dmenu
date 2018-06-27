@@ -11,8 +11,6 @@ use constant {
 	VERSION => 0.10,
 };
 
-# TODO: create man page #
-
 my %o = (
 	help => 0,
 	version => 0,
