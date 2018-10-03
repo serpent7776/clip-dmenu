@@ -5,7 +5,6 @@ use warnings;
 use Getopt::Long;
 use List::Util qw(first);
 use IPC::Open2;
-use Clipboard;
 
 use constant {
 	VERSION => 0.10,
@@ -51,6 +50,30 @@ END
 	exit;
 }
 
+sub has_clipboard_module {
+	return eval {
+		require Clipboard;
+		import Clipboard;
+		1;
+	};
+}
+
+sub get_clipboard_module {
+	return Clipboard->paste
+}
+
+sub get_clipboard_external {
+	return `xclip -o -sel clip`;
+}
+
+sub get_clipboard {
+	if (has_clipboard_module()) {
+		return get_clipboard_module();
+	} else {
+		return get_clipboard_external();
+	}
+}
+
 my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
 
@@ -81,7 +104,7 @@ if ((not defined $selected_name) or ($selected_name eq '')) {
 chomp $selected_name;
 my $idx = first { $labels[$_] eq $selected_name } 0 .. $#labels;
 my $selected_cmd = $commands[$idx];
-my $clipboard = Clipboard->paste;
+my $clipboard = get_clipboard();
 $selected_cmd =~ s/%s/$clipboard/g;
 if ($o{'background'}) {
         $selected_cmd .= ' &';

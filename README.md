@@ -34,4 +34,5 @@ where OPTIONS may be:
 
 ## Dependencies
 - perl
+- Clipboard perl module (optional) with fallback to `xclip` utility
 - dmenu (or equivalent, like rofi)
