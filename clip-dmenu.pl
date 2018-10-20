@@ -74,25 +74,31 @@ sub get_clipboard {
 	}
 }
 
-my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
-open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
-
-my @labels = ();
-my @commands = ();
-while (my $line = <$fh>) {
-	chomp $line;
-	if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
-		next;
+sub read_config {
+	my $config_file_name = shift;
+	open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
+	my @labels = ();
+	my @commands = ();
+	while (my $line = <$fh>) {
+		chomp $line;
+		if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
+			next;
+		}
+		my ($name, $cmd) = split('\t', $line, 3);
+		if (defined $name and defined $cmd) {
+			push @labels, $name;
+			push @commands, $cmd;
+		} else {
+			print STDERR "Ignoring malformed entry '$line'\n";
+		}
 	}
-	my ($name, $cmd) = split('\t', $line, 3);
-	if (defined $name and defined $cmd) {
-		push @labels, $name;
-		push @commands, $cmd;
-	} else {
-		print STDERR "Ignoring malformed entry '$line'\n";
-	}
+	return (\@labels, \@commands);
 }
-my $all_names = join "\n", @labels;
+
+
+my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
+my ($labels, $commands) = read_config($config_file_name);
+my $all_names = join "\n", @$labels;
 open2(*Reader, *Writer, $o{'cmd'});
 print Writer $all_names;
 close Writer;
@@ -102,8 +108,8 @@ if ((not defined $selected_name) or ($selected_name eq '')) {
 	exit;
 }
 chomp $selected_name;
-my $idx = first { $labels[$_] eq $selected_name } 0 .. $#labels;
-my $selected_cmd = $commands[$idx];
+my $idx = first { @{$labels}[$_] eq $selected_name } 0 .. $#{$labels};
+my $selected_cmd = @{$commands}[$idx];
 my $clipboard = get_clipboard();
 $selected_cmd =~ s/%s/$clipboard/g;
 if ($o{'background'}) {
