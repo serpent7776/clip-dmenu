@@ -74,9 +74,8 @@ sub get_clipboard {
 	}
 }
 
-sub read_config {
-	my $config_file_name = shift;
-	open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
+sub read_lines {
+	my $fh = shift;
 	my @labels = ();
 	my @commands = ();
 	while (my $line = <$fh>) {
@@ -92,7 +91,13 @@ sub read_config {
 			print STDERR "Ignoring malformed entry '$line'\n";
 		}
 	}
-	return (\@labels, \@commands);
+	return (\@labels, \@commands)
+}
+
+sub read_config {
+	my $config_file_name = shift;
+	open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
+	return read_lines($fh);
 }
 
 
