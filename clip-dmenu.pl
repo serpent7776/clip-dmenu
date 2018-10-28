@@ -93,7 +93,7 @@ sub read_config {
 		if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
 			return;
 		}
-		my ($name, $cmd) = split('\t', $line, 3);
+		my ($name, $cmd) = split('\t', $line, 2);
 		if (defined $name and defined $cmd) {
 			push @labels, $name;
 			push @commands, $cmd;
