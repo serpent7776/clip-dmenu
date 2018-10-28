@@ -76,12 +76,22 @@ sub get_clipboard {
 
 sub read_lines {
 	my $fh = shift;
-	my @labels = ();
-	my @commands = ();
+	my $fun = shift;
 	while (my $line = <$fh>) {
 		chomp $line;
+		$fun->($line);
+	}
+}
+
+sub read_config {
+	my $config_file_name = shift;
+	my @labels = ();
+	my @commands = ();
+	open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
+	read_lines($fh, sub {
+		my $line = shift;
 		if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
-			next;
+			return;
 		}
 		my ($name, $cmd) = split('\t', $line, 3);
 		if (defined $name and defined $cmd) {
@@ -90,14 +100,8 @@ sub read_lines {
 		} else {
 			print STDERR "Ignoring malformed entry '$line'\n";
 		}
-	}
+	});
 	return (\@labels, \@commands)
-}
-
-sub read_config {
-	my $config_file_name = shift;
-	open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
-	return read_lines($fh);
 }
 
 
