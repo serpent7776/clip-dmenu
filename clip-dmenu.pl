@@ -75,20 +75,21 @@ sub get_clipboard {
 }
 
 sub read_lines {
-	my $fh = shift;
+	my $file_name = shift;
 	my $fun = shift;
+	open my $fh, '<', $file_name or return;
 	while (my $line = <$fh>) {
 		chomp $line;
 		$fun->($line);
 	}
+	return 1;
 }
 
 sub read_config {
 	my $config_file_name = shift;
 	my @labels = ();
 	my @commands = ();
-	open my $fh, '<', $config_file_name or die "cannot open config file $config_file_name";
-	read_lines($fh, sub {
+	read_lines($config_file_name, sub {
 		my $line = shift;
 		if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
 			return;
@@ -100,10 +101,9 @@ sub read_config {
 		} else {
 			print STDERR "Ignoring malformed entry '$line'\n";
 		}
-	});
+	}) or die "cannot read config file $config_file_name";
 	return (\@labels, \@commands)
 }
-
 
 my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 my ($labels, $commands) = read_config($config_file_name);
