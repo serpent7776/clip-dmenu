@@ -85,13 +85,18 @@ sub read_lines {
 	return 1;
 }
 
+sub check_ignored {
+	my $line = shift;
+	return ($line =~ m/^\s*#/ or $line =~ m/^\s*$/);
+}
+
 sub read_config {
 	my $config_file_name = shift;
 	my @labels = ();
 	my @commands = ();
 	read_lines($config_file_name, sub {
 		my $line = shift;
-		if ($line =~ m/^\s*#/ or $line =~ m/^\s*$/) {
+		if (check_ignored($line)) {
 			return;
 		}
 		my ($name, $cmd) = split('\t', $line, 2);
