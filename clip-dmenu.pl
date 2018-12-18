@@ -110,14 +110,21 @@ sub read_config {
 	return (\@labels, \@commands)
 }
 
+sub run_dmenu {
+	my $cmd = shift;
+	my $labels = shift;
+	my $all_names = join "\n", @$labels;
+	open2(*Reader, *Writer, $cmd);
+	print Writer $all_names;
+	close Writer;
+	my $selected_name = <Reader>;
+	close Reader;
+	return $selected_name;
+}
+
 my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 my ($labels, $commands) = read_config($config_file_name);
-my $all_names = join "\n", @$labels;
-open2(*Reader, *Writer, $o{'cmd'});
-print Writer $all_names;
-close Writer;
-my $selected_name = <Reader>;
-close Reader;
+my $selected_name = run_dmenu($o{'cmd'}, $labels);
 if ((not defined $selected_name) or ($selected_name eq '')) {
 	exit;
 }
