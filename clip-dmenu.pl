@@ -122,10 +122,15 @@ sub run_dmenu {
 	return $selected_name;
 }
 
+sub is_selection_valid {
+	my $selection = shift;
+	return ((defined $selection) and ($selection ne ''));
+}
+
 my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 my ($labels, $commands) = read_config($config_file_name);
 my $selected_name = run_dmenu($o{'cmd'}, $labels);
-if ((not defined $selected_name) or ($selected_name eq '')) {
+if (not is_selection_valid($selected_name)) {
 	exit;
 }
 chomp $selected_name;
