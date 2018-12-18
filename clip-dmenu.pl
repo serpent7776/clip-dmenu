@@ -127,6 +127,15 @@ sub is_selection_valid {
 	return ((defined $selection) and ($selection ne ''));
 }
 
+sub execute {
+	my $cmd = shift;
+	my $run_in_bg = shift;
+	if ($run_in_bg) {
+		$cmd .= ' &';
+	}
+	system($cmd);
+}
+
 my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
 my ($labels, $commands) = read_config($config_file_name);
 my $selected_name = run_dmenu($o{'cmd'}, $labels);
@@ -138,7 +147,4 @@ my $idx = first { @{$labels}[$_] eq $selected_name } 0 .. $#{$labels};
 my $selected_cmd = @{$commands}[$idx];
 my $clipboard = get_clipboard();
 $selected_cmd =~ s/%s/$clipboard/g;
-if ($o{'background'}) {
-        $selected_cmd .= ' &';
-}
-system($selected_cmd);
+execute($selected_cmd, $o{'background'})
