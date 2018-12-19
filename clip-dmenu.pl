@@ -50,6 +50,10 @@ END
 	exit;
 }
 
+sub get_default_config_path {
+	return ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config'
+}
+
 sub has_clipboard_module {
 	return eval {
 		require Clipboard;
@@ -144,7 +148,7 @@ sub execute {
 	system($cmd);
 }
 
-my $config_file_name = $o{'file'} || ($ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config") . '/clip-dmenu/config';
+my $config_file_name = $o{'file'} || get_default_config_path();
 my ($labels, $commands) = read_config($config_file_name);
 my $selected_name = run_dmenu($o{'cmd'}, $labels);
 if (not is_selection_valid($selected_name)) {
