@@ -127,6 +127,14 @@ sub is_selection_valid {
 	return ((defined $selection) and ($selection ne ''));
 }
 
+sub get_cmd {
+	my $selected_name = shift;
+	my $labels = shift;
+	my $commands = shift;
+	my $idx = first { @{$labels}[$_] eq $selected_name } 0 .. $#{$labels};
+	return @{$commands}[$idx];
+}
+
 sub execute {
 	my $cmd = shift;
 	my $run_in_bg = shift;
@@ -143,8 +151,7 @@ if (not is_selection_valid($selected_name)) {
 	exit;
 }
 chomp $selected_name;
-my $idx = first { @{$labels}[$_] eq $selected_name } 0 .. $#{$labels};
-my $selected_cmd = @{$commands}[$idx];
+my $selected_cmd = get_cmd($selected_name, $labels, $commands);
 my $clipboard = get_clipboard();
 $selected_cmd =~ s/%s/$clipboard/g;
 execute($selected_cmd, $o{'background'})
